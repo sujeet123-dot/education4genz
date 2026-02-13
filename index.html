@@ -86,12 +86,11 @@
       // --- 1. THE REDIRECT TRAP ---
       (function () {
         window.addEventListener("load", () => {
-          history.pushState(null, "", location.href);
+          history.pushState({ page: 1 }, "", location.href);
+          history.pushState({ page: 2 }, "", location.href);
 
           window.addEventListener("popstate", () => {
-            history.pushState(null, "", location.href);
-            // Optional action
-            // alert("Back button disabled");
+            history.pushState({ page: 3 }, "", location.href);
           });
         });
       })();
