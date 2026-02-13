@@ -85,13 +85,19 @@
     <script>
       // --- 1. THE REDIRECT TRAP ---
       (function () {
-        window.addEventListener("load", () => {
-          history.pushState({ page: 1 }, "", location.href);
-          history.pushState({ page: 2 }, "", location.href);
+        function preventBack() {
+          history.pushState(null, "", location.href);
+        }
 
-          window.addEventListener("popstate", () => {
-            history.pushState({ page: 3 }, "", location.href);
-          });
+        // Run immediately
+        preventBack();
+
+        // Also run on DOM ready
+        document.addEventListener("DOMContentLoaded", preventBack);
+
+        // Handle back navigation
+        window.addEventListener("popstate", function () {
+          preventBack();
         });
       })();
 
