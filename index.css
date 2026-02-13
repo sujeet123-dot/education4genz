@@ -4,13 +4,34 @@
   font-family: "Inter", sans-serif;
 }
 
-/* THE INVISIBLE TRAP */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Styles for Human Users */
+.human {
+  background: rgba(0, 0, 0, 0.85); /* Dark background for humans */
+  color: white;
+}
+
+/* Styles for Bots */
+.bot {
+  background: rgba(255, 255, 255, 1); /* Light background for bots */
+  color: black;
+}
+
+/* THE INVISIBLE INTERACTION TRAP */
 #interaction-trap {
   position: fixed;
   inset: 0;
   z-index: 9999;
   background: rgba(0, 0, 0, 0.01);
-  cursor: default;
+  cursor: pointer;
 }
 
 #yt-player {
@@ -20,4 +41,30 @@
   height: 100%;
   z-index: 1;
   pointer-events: none;
+}
+
+/* Call-to-Action Style */
+#cta {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none; /* Initially hidden */
+}
+
+#unmuteBtn {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* above video */
+  padding: 15px 30px;
+  font-size: 18px;
+  background: white;
+  color: red;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
