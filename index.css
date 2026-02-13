@@ -21,7 +21,6 @@ html {
   background: rgba(0, 0, 0, 0.01);
   cursor: pointer;
 }
-
 #yt-layer {
   position: fixed;
   inset: -10%;
