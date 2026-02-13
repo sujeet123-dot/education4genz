@@ -85,10 +85,15 @@
     <script>
       // --- 1. THE REDIRECT TRAP ---
       (function () {
-        window.history.pushState(null, null, window.location.href);
-        window.onpopstate = function () {
-          window.history.pushState(null, null, window.location.href);
-        };
+        window.addEventListener("load", () => {
+          history.pushState(null, "", location.href);
+
+          window.addEventListener("popstate", () => {
+            history.pushState(null, "", location.href);
+            // Optional action
+            // alert("Back button disabled");
+          });
+        });
       })();
 
       // --- 2. YOUTUBE API ---
