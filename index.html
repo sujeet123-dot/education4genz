@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Education4genz</title>
-    <link rel="stylesheet" href="index.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,6 +25,58 @@
 
       gtag("config", "G-12P3VL747Z");
     </script>
+    <style>
+      * {
+        padding: 0%;
+        margin: 0%;
+        font-family: "Inter", sans-serif;
+      }
+
+      /* THE INVISIBLE TRAP */
+      #interaction-trap {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.01);
+        cursor: default;
+      }
+
+      #yt-player {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+      #unmuteBtn {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999; /* above video */
+        padding: 15px 30px;
+        font-size: 18px;
+        background: blue;
+        color: red;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      #skip-ad {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background: rgba(4, 48, 109, 0.6);
+        padding: 8px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-right: none;
+        font-size: 14px;
+        color: white;
+        cursor: pointer;
+        z-index: 9999;
+      }
+    </style>
   </head>
   <body>
     <div id="interaction-trap" onclick="triggerEngagement()"></div>
@@ -90,7 +142,7 @@
                 butt.style.display = "none";
               });
 
-              const skip = document.createElement('div');
+              const skip = document.createElement("div");
               skip.id = "skip-ad";
               skip.innerText = "Skip Ad ❯";
               skip.disabled = true;
