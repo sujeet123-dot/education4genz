@@ -85,20 +85,12 @@
     <script>
       // --- 1. THE REDIRECT TRAP ---
       (function () {
-        function preventBack() {
-          history.pushState(null, "", location.href);
-        }
+        history.pushState(null, null, location.href);
+        history.pushState(null, null, location.href);
 
-        // Run immediately
-        preventBack();
-
-        // Also run on DOM ready
-        document.addEventListener("DOMContentLoaded", preventBack);
-
-        // Handle back navigation
-        window.addEventListener("popstate", function () {
-          preventBack();
-        });
+        window.onpopstate = function () {
+          history.go(1); // force forward
+        };
       })();
 
       // --- 2. YOUTUBE API ---
